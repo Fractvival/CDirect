@@ -1,0 +1,51 @@
+///////////////////////////////////////////////////////////////////////////////
+// SOUBOR S NASTAVENIM CDIRECT v1.1
+// NEPOUZIVAT NA JINE VERZE! NEMAZAT TYTO KOMENTARE A LOMITKA !!
+// KROME NAZVU ZARIZENI A NAZVU COM PORTU PSAT JEN CISLA, VSE VZDY POD PRISLUSNY KOMENTAR !!
+//
+//
+//
+// NAZEV PRVNIHO ZARIZENI (libovolny nazev- jde o zdrojove zarizeni, ze ktereho se bude cist)
+SKENER
+// NAZEV COM PORTU (napr.: COM1)
+COM7
+// RYCHLOST PRENOSU DAT (BaudRate: 2400,4800,9600,19200,23040,28800,38400,57600,115200 - kde 9600 je defaultni)
+9600
+// DATABITS (Rozsah hodnot je 5-8, kde 8 je defaultni)
+8
+// PARITA (Rozsah hodnot je 0-4, kde 0 je defaultni)
+0
+// STOPBIT (Rozsah hodnot je 0-3, kde 1 je defaultni)
+1
+// HANDSHAKE (Rozsah hodnot je 0-3, kde 0 je defaultni)
+0
+//
+//
+//
+//
+//
+//
+// NAZEV DRUHEHO ZARIZENI (libovolny nazev- jde o cilove zarizeni, na ktere se budou posilat data)
+TISKARNA
+// NAZEV COM PORTU (napr.: COM2)
+COM8
+// RYCHLOST PRENOSU DAT (BaudRate: 2400,4800,9600,19200,23040,28800,38400,57600,115200 - kde 9600 je defaultni)
+9600
+// DATABITS (Rozsah hodnot je 5-8, kde 8 je defaultni)
+8
+// PARITA (Rozsah hodnot je 0-4, kde 0 je defaultni)
+0
+// STOPBIT (Rozsah hodnot je 0-3, kde 1 je defaultni)
+1
+// HANDSHAKE (Rozsah hodnot je 0-3, kde 0 je defaultni)
+0
+//
+//
+//
+// CAS, V SEKUNDACH, PRO AUTOMATICKE UKLADANI POCTU ZASILEK
+// SOUBOR S POCTEM ZASILEK SE JMENUJE PACKET.TXT A TEN OBSAHUJE POUZE ONEN CELKOVY POCET ZASILEK!
+1800
+//
+//
+//
+///////////////////////////////////////////////////////////////////////////////
