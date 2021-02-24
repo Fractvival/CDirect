@@ -26,6 +26,7 @@ V tomto souboru je pouze hodnota počtu kódů, tedy jeden řádek s hodnotou. T
 Nástroje pro testování této aplikace:
 
 https://sourceforge.net/projects/com0com/
+
 https://sourceforge.net/projects/readwriteserial/
 
 
