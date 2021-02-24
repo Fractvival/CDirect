@@ -5,4 +5,16 @@ C:\Users\Admin\source\repos\CDirect\CDirect\obj\Debug\CDirect.Properties.Resourc
 C:\Users\Admin\source\repos\CDirect\CDirect\obj\Debug\CDirect.csproj.GenerateResource.cache
 C:\Users\Admin\source\repos\CDirect\CDirect\obj\Debug\CDirect.exe
 C:\Users\Admin\source\repos\CDirect\CDirect\obj\Debug\CDirect.pdb
+<<<<<<< HEAD
+C:\Users\Admin\source\repos\Fractvival\CDirect-v1.1\CDirect\bin\Debug\CDirect.exe
+C:\Users\Admin\source\repos\Fractvival\CDirect-v1.1\CDirect\bin\Debug\CDirect.pdb
+C:\Users\Admin\source\repos\Fractvival\CDirect-v1.1\CDirect\obj\Debug\CDirect.csprojAssemblyReference.cache
+C:\Users\Admin\source\repos\Fractvival\CDirect-v1.1\CDirect\obj\Debug\CDirect.Form1.resources
+C:\Users\Admin\source\repos\Fractvival\CDirect-v1.1\CDirect\obj\Debug\CDirect.Properties.Resources.resources
+C:\Users\Admin\source\repos\Fractvival\CDirect-v1.1\CDirect\obj\Debug\CDirect.csproj.GenerateResource.cache
+C:\Users\Admin\source\repos\Fractvival\CDirect-v1.1\CDirect\obj\Debug\CDirect.csproj.CoreCompileInputs.cache
+C:\Users\Admin\source\repos\Fractvival\CDirect-v1.1\CDirect\obj\Debug\CDirect.exe
+C:\Users\Admin\source\repos\Fractvival\CDirect-v1.1\CDirect\obj\Debug\CDirect.pdb
+=======
 C:\Users\Admin\source\repos\CDirect\CDirect\obj\Debug\CDirect.csprojAssemblyReference.cache
+>>>>>>> bdcecb5c77e37c1cdced3281c0ae552aa73fea3f

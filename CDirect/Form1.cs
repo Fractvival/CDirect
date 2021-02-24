@@ -288,7 +288,7 @@ namespace CDirect
                 // Nastav velikost bufferu portu
                 serialPort1.ReadBufferSize = 4096;
                 // jak dlouho cekat na provedeni operace v milisekundach
-                serialPort1.WriteTimeout = 10000;
+                serialPort1.WriteTimeout = -1;
                 serialPort1.PortName = Convert.ToString(srcPort.PortName);
                 serialPort1.BaudRate = Convert.ToInt32(srcPort.BaudRate);
                 serialPort1.DataBits = Convert.ToInt32(srcPort.DataBits);
@@ -358,7 +358,7 @@ namespace CDirect
             try
             {
                 serialPort2.ReadBufferSize = 4096;
-                serialPort2.WriteTimeout = -1;
+                serialPort2.WriteTimeout = 3000;
                 serialPort2.PortName = Convert.ToString(destPort.PortName);
                 serialPort2.BaudRate = Convert.ToInt32(destPort.BaudRate);
                 serialPort2.DataBits = Convert.ToInt32(destPort.DataBits);
@@ -517,6 +517,9 @@ namespace CDirect
             textBox12.Text = Convert.ToString(serialPort2.DataBits);
             textBox13.Text = Convert.ToString(serialPort2.Parity);
 
+            // Vypiseme rozsahy velikosti dat pro platny kod
+            label19.Text = Convert.ToString(setting.MinLenghtBarcode)+" - "+Convert.ToString(setting.MaxLenghtBarcode);
+
         }
 
         // Ulozi celkovy pocet vytisknutych kodu
@@ -535,9 +538,8 @@ namespace CDirect
                     // v pripade nejakych chyb pri mazani souboru vypis pouze debug, program neukoncuj!
                     Debug.WriteLine("SaveTotalBarcode -> TRY delete Packet.txt");
                     Debug.WriteLine("SaveTotalBarcode ->" + ioEx.Message + "\n");
-                    Console.Beep(1000, 500);
-                    Console.Beep(300, 500);
-                    Console.Beep(1000, 500);
+                    Console.Beep(300, 100);
+                    Console.Beep(300, 100);
                     return;
                 }
             }
@@ -560,9 +562,8 @@ namespace CDirect
             {
                 Debug.WriteLine("SaveTotalBarcode -> TRY create writeline Packet.txt");
                 Debug.WriteLine("SaveTotalBarcode ->" + ioEx.Message + "\n");
-                Console.Beep(1000, 500);
-                Console.Beep(300, 500);
-                Console.Beep(1000, 500);
+                Console.Beep(300, 100);
+                Console.Beep(300, 100);
                 return;
             }
         }
@@ -571,13 +572,13 @@ namespace CDirect
         // Tick casovace, kazdych 25ms
         private void timer1_Tick(object sender, EventArgs e)
         {
-            // Zde do tohoto textboxu se bude vypisovat celkovy cas od psuteni programu
+            // Zde do tohoto textboxu se bude vypisovat celkovy cas od sputeni programu
             textBox1.Text = (DateTime.UtcNow - System.Diagnostics.Process.GetCurrentProcess().StartTime.ToUniversalTime()).ToString();
             // Zde vypisujeme pocet vytisknutych kodu od spusteni programu
             textBox2.Text = Convert.ToString(setting.NowPacket);
             // Zde celkovy pocet ukladany/nacitany ze souboru packet.txt
             textBox3.Text = Convert.ToString(setting.TotalPacket);
-            //// Zvedneme deltu o 25 ms (coz je interval tiku casovace)
+            //// Zvedneme deltu tohoto casovace o 25 ms (coz je interval tiku casovace)
             deltaTick += 25;
             
             // pokud ubehla sekunda tak..
@@ -592,23 +593,49 @@ namespace CDirect
                     deltaAutoRestart += 1;
                     if ( deltaAutoRestart >= setting.AutoRestart )
                     {
-                        ///////////////////////
-                        //* TOTO POTOM SMAZ !! ->> 
                         deltaAutoRestart = 0;
-                        ///
-                        // ULOZIME CELKOVY POCET VYTISKNUTYCH KODU - setting.TotalPacket
-                        // POTE ZDE SPUSTIME NOVOU INSTANCI PROGRAMU
-                        // A UKONCIME TU SOUCASNOU !
+                        SaveTotalBarcode("packet.txt");
+                        try
+                        {
+                            var info = new System.Diagnostics.ProcessStartInfo(Application.ExecutablePath);
+                            if (info != null)
+                            {
+                                if (serialPort1.IsOpen)
+                                    serialPort1.Close();
+                                if (serialPort2.IsOpen)
+                                    serialPort2.Close();
+                                System.Diagnostics.Process.Start(info);
+                                Environment.Exit(0);
+                            }
+                            else
+                            {
+                                Console.Beep(1300, 100);
+                                Console.Beep(1300, 100);
+                                Console.Beep(1300, 100);
+                                Console.Beep(1300, 100);
+                                Console.Beep(1300, 100);
+                                Console.Beep(1300, 100);
+                            }
+                        }
+                        catch(Exception ex)
+                        {
+                            Console.Beep(1300, 100);
+                            Console.Beep(1300, 100);
+                            Console.Beep(1300, 100);
+                            Console.Beep(1300, 100);
+                            Console.Beep(1300, 100);
+                            Console.Beep(1300, 100);
+                        }
                     }
                 }
                 // .. v opacnem pripade, tedy kdyz neni povolen autorestart, tak..
                 else
                 {
-                    // zvysime deltu ukladani poctu o 1 a pokud prekona nastaveny casovy limit tak spusti akci
+                    // zvysime deltu automatickeho ukladani poctu o 1 a pokud prekona nastaveny casovy limit tak spusti akci
                     deltaSaveTime += 1;
                     if ( deltaSaveTime >= setting.SaveTime )
                     {
-                        // zresetujeme deltu ukladani poctu
+                        // zresetujeme deltu automatickeho ukladani poctu
                         deltaSaveTime = 0;
                         // ULOZIME celkovy pocet vytisknutych zasilek - setting.TotalPacket
                         SaveTotalBarcode("packet.txt");
@@ -634,42 +661,81 @@ namespace CDirect
         // Pokud prijdou data ze zdrojoveho portu, provedeme akci
         private void onReceivedDataSourceCom(object sender, SerialDataReceivedEventArgs e)
         {
+            // pomocna promenna znacici vysledek (vhodnost) opracovani barcode
+            bool okData = false;
+            // zobrazime ikonku vedle textboxu ziskanych dat, v tomto pripade ikona "cekam kody"
+            pictureBox1.Image = Properties.Resources.barcode;
+            // prevedeme argumt sender na serialport
             SerialPort spData = (SerialPort)sender;
+            // vytvorime buffer o velikosti dat k prijmuti
             byte[] buf = new byte[spData.BytesToRead];
+            // a vypnime jej daty ze serialportu
             spData.Read(buf, 0, buf.Length);
+            // upravime ocistime data od pomlcek
             buf = FromHex(BitConverter.ToString(buf));
+            // prevedeme na obycejne znaky
             String Barcode = Encoding.ASCII.GetString(buf);
-            
+            // odebereme enter a zalomeni
+            Barcode = Barcode.Replace("\n", "").Replace("\r", "");
+            // nyni teprve zjistime delku dat
             int len = Barcode.Length;
-            String ch = Barcode.Substring((len-1), 1);
-            
-            if ( ch = "\\n")
-            {
+            // porovname jestli nam sedi do vyberu co se delky tyce
+            if (len >= setting.MinLenghtBarcode && len <= setting.MaxLenghtBarcode)
+                okData = true; // a pokud sedi, pustime tyto data k tiskarne
+            // jeste tyto data posleme k zobrazeni do textu
+            // jelikoz je volani teto fce v jinem vlaknu, musime volat control z puvodniho vlakna, proto Invoke
+            textBox18.Invoke((MethodInvoker)delegate {
+                textBox18.Text = Barcode;
+            });
 
-            }
-            
-            if (Barcode.Length >= setting.MinLenghtBarcode && Barcode.Length <= setting.MaxLenghtBarcode)
+            // pokud jsou data vhodna, tak..
+            if (okData)
             {
+                // zkus na chybu..
                 try
                 {
+                    // pokud neni serialPort tiskarny otevren, tak jej otevreme
                     if (!(serialPort2.IsOpen))
                         serialPort2.Open();
-                    serialPort2.Write(setting.PrefixBarcode + Barcode + setting.SuffixBarcode);
+                    // A posleme na nej data ze serialPortu vcetne prefixu a suffixu
+                    String _dataToWrite = setting.PrefixBarcode + Barcode + setting.SuffixBarcode;
+                    serialPort2.Write(_dataToWrite);
+                    // a port tiskarny zavreme
                     serialPort2.Close();
                 }
+                // pokud se vyskytne chyba
                 catch (Exception ex)
                 {
                     Debug.WriteLine("onReceiveDataSourceCom -> TRY serialPort2 open write");
                     Debug.WriteLine("SaveTotalBarcode ->" + ex.Message + "\n");
-                    Console.Beep(1000, 500);
-                    Console.Beep(300, 500);
-                    Console.Beep(1000, 500);
+                    pictureBox1.Image = Properties.Resources.no;
+                    Console.Beep(300, 100);
+                    Console.Beep(300, 100);
                     return;
                 }
+                ///////////////////////////
+                // TOTO je usek ktery znamena ze vse dopadlo na pohodu a barcode se odeslal na tiskarnu
                 setting.NowPacket++;
                 setting.TotalPacket++;
+                pictureBox1.Image = Properties.Resources.ok;
+                Console.Beep(1300, 100);
+                Console.Beep(1500, 100);
+            }
+            // pokud data nejsou vhodna, tak..
+            else
+            {
+                pictureBox1.Image = Properties.Resources.no;
+                Console.Beep(300, 100);
+                Console.Beep(300, 100);
             }
         }
+
+        // zavola se pri zavreni okna aplikace
+        private void onClose(object sender, FormClosingEventArgs e)
+        {
+            SaveTotalBarcode("packet.txt");
+        }
+
 
     } //konec Form1
 
