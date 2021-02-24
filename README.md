@@ -25,8 +25,10 @@ V tomto souboru je pouze hodnota počtu kódů, tedy jeden řádek s hodnotou. T
 
 Nástroje pro testování této aplikace:
 
+- vytvoření virtuálních COM portů
 https://sourceforge.net/projects/com0com/
 
+- možnost provádět zápisy do COM portu
 https://sourceforge.net/projects/readwriteserial/
 
 
