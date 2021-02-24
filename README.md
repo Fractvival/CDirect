@@ -1,5 +1,5 @@
 # CDirect 
-## COM port director
+## COM port director / C# / Windows / WinForms / .NET Framework 3.5
 
 Aplikace sloužící pro propojení skeneru a tiskárny pomocí sériového portu (COM portu).
 Záměrem této aplikace je, aby data načtená ze skeneru čárových kódů poslala na tiskárnu čárových kódů a to pomocí COM portů.
