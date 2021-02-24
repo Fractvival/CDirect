@@ -23,4 +23,10 @@ V nastavení je tedy možné provést tyto možnosti:
 Současně s vytvořením souboru s nastavením se vytvoří i soubor s počty již vytisknutých kódů, soubor packet.txt.
 V tomto souboru je pouze hodnota počtu kódů, tedy jeden řádek s hodnotou. Ta je před spuštěním aplikace načtena a navyšuje se o nové v průběhu běhu aplikace.
 
+Nástroje pro testování této aplikace:
+
+https://sourceforge.net/projects/com0com/
+https://sourceforge.net/projects/readwriteserial/
+
+
 
