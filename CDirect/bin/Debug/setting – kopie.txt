@@ -28,7 +28,7 @@ COM7
 // NAZEV DRUHEHO ZARIZENI (libovolny nazev- jde o cilove zarizeni, na ktere se budou posilat data)
 TISKARNA
 // NAZEV COM PORTU (napr.: COM2)
-COM9
+COM8
 // RYCHLOST PRENOSU DAT (BaudRate: 2400,4800,9600,19200,23040,28800,38400,57600,115200 - kde 9600 je defaultni)
 9600
 // DATABITS (Rozsah hodnot je 5-8, kde 8 je defaultni)
