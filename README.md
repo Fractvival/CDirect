@@ -25,6 +25,9 @@ V tomto souboru je pouze hodnota počtu kódů, tedy jeden řádek s hodnotou. T
 
 Nástroje pro testování této aplikace:
 
+- NET Framework 4
+- https://www.microsoft.com/cs-cz/download/details.aspx?id=17718
+
 - vytvoření virtuálních COM portů (com0com)
 - https://sourceforge.net/projects/com0com/
 
